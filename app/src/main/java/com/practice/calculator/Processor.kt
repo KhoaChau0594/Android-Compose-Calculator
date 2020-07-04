@@ -1,7 +1,5 @@
 package com.practice.calculator
 
-import android.util.Log
-import android.widget.Toast
 import androidx.ui.graphics.Color
 import androidx.ui.text.AnnotatedString
 import androidx.ui.text.SpanStyle
@@ -34,17 +32,53 @@ fun expressionProcessor(str: String): AnnotatedString {
     }
 }
 
-fun compute(expression: String): String {
-    return ""
+fun compute(): String {
+    return polishNotationGenerate().toString()
 }
 
-fun polishNotationGenerate(expression: String): Stack<String> {
-    var operation = ArrayList<Boolean>()
-    var parenthesis = ArrayList<Boolean>()
+fun polishNotationGenerate(): ArrayList<String> {
+    var array = ArrayList<String>()
+    var isParenthesis = false
+    var parenthesis = Stack<Boolean>()
+    var isOperation = false
+    var parenthesisIndex = 0
+    for (str in CalculatorData.expression) {
+        if (str == "(") {
+            parenthesis.add(true)
+            isParenthesis = true
+            parenthesisIndex = str.lastIndex
+        } else if (str == ")") {
+            isParenthesis = false
+        } else {
+            if (str == "+" || str == "-" || str == "x" || str == "/" || str == "^") {
+                array.add(str)
+                isOperation = true
+                continue
+            }
 
-//    for(i in expression){
-//        if
-//    }
+            // produce the proper index
+            if (isParenthesis) {
+                if (isOperation) {
+                    parenthesisIndex--
+                }
+            }
 
-    return Stack()
+            if (isOperation) {
+                var index = 0
+                if (isParenthesis) {
+                    index = array.lastIndex -1
+                } else {
+                    index = array.lastIndex
+                }
+                array.add(array.last())
+                array[index] = str
+
+            } else {
+                array.add(str)
+            }
+            parenthesisIndex++
+        }
+    }
+
+    return array
 }

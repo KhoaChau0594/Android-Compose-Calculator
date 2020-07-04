@@ -99,7 +99,7 @@ fun ResultScreen(expression: MutableState<String>, resultState: MutableState<Str
 
 @Composable
 fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) {
-    var currentNumber: String = ""
+    var currentNumber = ""
     val btnModifier = Modifier
 //        .preferredHeight(70.dp)
 //        .preferredWidth(70.dp)
@@ -110,9 +110,16 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
 //        .preferredWidth(70.dp)
 
     fun onClick(c: String, isOperator: Boolean = false) {
+        if (c.isEmpty()) {
+            if(currentNumber != "") CalculatorData.expression.add(currentNumber)
+            currentNumber = ""
+            return
+        }
+
         expression.value += c
         if (isOperator) {
-            CalculatorData.expression.add(currentNumber)
+            if(currentNumber != "") CalculatorData.expression.add(currentNumber)
+            if(c != "") CalculatorData.expression.add(c.trim())
             currentNumber = ""
         } else {
             currentNumber += c
@@ -220,6 +227,8 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
             onClick = {
                 expression.value = ""
                 resultState.value = ""
+                CalculatorData.expression.clear()
+                currentNumber = ""
             },
             modifier = btnModifier.tag("tag1"),
             shape = btnShape,
@@ -231,7 +240,9 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
             Text(text = "C", fontSize = numpadFontSize)
         }
         Button(
-            onClick = { expression.value += "(" },
+            onClick = {
+                onClick("(", true)
+            },
             modifier = btnModifier.tag("tag2"),
             backgroundColor = Color(0xFFE9F0F4),
             contentColor = Color(0xFF4C5159),
@@ -240,7 +251,7 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
             Text(text = "(", fontSize = numpadFontSize)
         }
         Button(
-            onClick = { expression.value += ")" },
+            onClick = { onClick(")", true) },
             modifier = btnModifier.tag("tag3"),
             backgroundColor = Color(0xFFE9F0F4),
             contentColor = Color(0xFF4C5159),
@@ -249,7 +260,7 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
             Text(text = ")", fontSize = numpadFontSize)
         }
         Button(
-            onClick = { onClick(" / ") },
+            onClick = { onClick(" / ", true) },
             modifier = btnModifier.tag("tag4"),
             backgroundColor = Color(0xFFFF9500),
             contentColor = Color.White,
@@ -385,7 +396,7 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
             Text(text = "6", fontSize = numpadFontSize)
         }
         Button(
-            onClick = { onClick(" - ") },
+            onClick = { onClick(" - ", true) },
             modifier = btnModifier.tag("tag4"),
             backgroundColor = Color(0xFFFF9500),
             contentColor = Color.White,
@@ -478,7 +489,7 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
             Text(text = "3", fontSize = numpadFontSize)
         }
         Button(
-            onClick = { onClick(" + ") },
+            onClick = { onClick(" + ", true) },
             modifier = btnModifier.tag("tag4"),
             backgroundColor = Color(0xFFFF9500),
             contentColor = Color.White,
@@ -511,7 +522,11 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
             Text(text = ".", fontSize = numpadFontSize)
         }
         Button(
-            onClick = { resultState.value = compute(expression.value) },
+            onClick = {
+                onClick("", true)
+                resultState.value = compute()
+                Log.d("DATA", CalculatorData.expression.toString())
+            },
             modifier = btnModifier.tag("tag7"),
             backgroundColor = Color(0xFF2EC973),
             contentColor = Color.White,
