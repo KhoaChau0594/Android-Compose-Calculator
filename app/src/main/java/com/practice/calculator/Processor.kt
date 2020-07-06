@@ -4,6 +4,8 @@ import androidx.ui.graphics.Color
 import androidx.ui.text.AnnotatedString
 import androidx.ui.text.SpanStyle
 import androidx.ui.text.annotatedString
+import com.practice.calculator.CalculatorData.FIRSTOPERATOR
+import com.practice.calculator.CalculatorData.SECOND_OPERATOR
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -37,46 +39,58 @@ fun compute(): String {
 }
 
 fun polishNotationGenerate(): ArrayList<String> {
-    var array = ArrayList<String>()
-    var isParenthesis = false
-    var parenthesis = Stack<Boolean>()
-    var isOperation = false
-    var parenthesisIndex = 0
-    for (str in CalculatorData.expression) {
-        if (str == "(") {
-            parenthesis.add(true)
-            isParenthesis = true
-            parenthesisIndex = str.lastIndex
-        } else if (str == ")") {
-            isParenthesis = false
-        } else {
-            if (str == "+" || str == "-" || str == "x" || str == "/" || str == "^") {
-                array.add(str)
-                isOperation = true
-                continue
-            }
+    val array = ArrayList<String>()
 
-            // produce the proper index
-            if (isParenthesis) {
-                if (isOperation) {
-                    parenthesisIndex--
-                }
-            }
+    return array
+}
 
-            if (isOperation) {
-                var index = 0
-                if (isParenthesis) {
-                    index = array.lastIndex -1
+fun fractionGenerate(expression: ArrayList<String>): ArrayList<String> {
+    val array = ArrayList<String>()
+    var isFirstOperator = false
+    var isSecondOperator = false
+    val operatorStack = Stack<Boolean>() // true -> first, false -> second
+
+    // Make this be right for the simplest cases(without parenthesis)
+    for (i in expression) {
+        val firstOperator = CalculatorData.firstOperator.indexOf(i)
+        val secondOperator = CalculatorData.secondOperator.indexOf(i)
+        // Check operator
+        when {
+            firstOperator != -1 -> { // "x", "/"
+                if (operatorStack.isNotEmpty() && operatorStack.peek() == SECOND_OPERATOR) { // check if there is second operator in stack
+                    array.add(array.lastIndex, i)
                 } else {
-                    index = array.lastIndex
+                    array.add(i)
                 }
-                array.add(array.last())
-                array[index] = str
-
-            } else {
-                array.add(str)
+                isFirstOperator = true
             }
-            parenthesisIndex++
+            secondOperator != -1 -> { //"+", "-"
+                array.add(i)
+                isSecondOperator = true
+                isFirstOperator = false
+                if (operatorStack.isNotEmpty()) {
+                    operatorStack.pop()
+                }
+            }
+            else -> {
+                if (isSecondOperator) {
+                    array.add(array.lastIndex, i)
+
+                    operatorStack.push(SECOND_OPERATOR) // save operator to stack
+                    isSecondOperator = false
+                } else if (isFirstOperator) {
+                    if (operatorStack.isNotEmpty() && operatorStack.peek() == SECOND_OPERATOR) { // last operator is seconde operator
+                        array.add(array.lastIndex - operatorStack.size, i)
+                    } else {
+                        array.add(array.lastIndex, i)
+
+                        operatorStack.push(FIRSTOPERATOR) // save operator to stack
+                        isFirstOperator = false
+                    }
+                } else {
+                    array.add(i)
+                }
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.practice.calculator
+package com.practice.calculator.TestExample
 
 
 data class Student (val name: String, val mark: ArrayList<Double>){

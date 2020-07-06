@@ -1,4 +1,4 @@
-package com.practice.calculator
+package com.practice.calculator.TestExample
 
 class Window{
     fun close() = println("Window close")

@@ -1,16 +1,11 @@
 package com.practice.calculator.GradesService
 
-import com.practice.calculator.GradesService
-import com.practice.calculator.Student
+import com.practice.calculator.TestExample.GradesService
+import com.practice.calculator.TestExample.Student
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.Assert.assertEquals
-import org.hamcrest.MatcherAssert
-import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 
 class test_averageGrades {
     var student: Student = mockk<Student>()

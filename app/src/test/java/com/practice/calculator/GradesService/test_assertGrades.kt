@@ -1,12 +1,13 @@
 package com.practice.calculator.GradesService
 
-import com.practice.calculator.GradesService
-import com.practice.calculator.Student
+import com.practice.calculator.TestExample.GradesService
+import com.practice.calculator.TestExample.Student
 import io.mockk.*
 import org.junit.Test
 
 class test_assertGrades {
-    var student: Student = mockkClass(Student::class)
+    var student: Student = mockkClass(
+        Student::class)
     var gradlesService = GradesService()
 
     @Test
