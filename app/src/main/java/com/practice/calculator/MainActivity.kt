@@ -105,18 +105,28 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
 //        .preferredWidth(70.dp)
     val btnShape = RoundedCornerShape(30.dp)
     val btnModifier2 = Modifier
-
+    var modifing = false
 //        .preferredHeight(50.dp)
 //        .preferredWidth(70.dp)
 
     fun onClick(c: String, isOperator: Boolean = false) {
-        if (c.isEmpty()) {
+
+        if (c.isEmpty()) { // "=" was clicked
             if(currentNumber != "") CalculatorData.expression.add(currentNumber)
             currentNumber = ""
+            modifing = true
             return
         }
 
+        if(modifing){// if "=" was clicked we can add number to previous num
+
+            currentNumber = CalculatorData.expression[CalculatorData.expression.lastIndex]
+            CalculatorData.expression.removeAt(CalculatorData.expression.lastIndex)
+            modifing = false // turn the "flag" off
+        }
+
         expression.value += c
+
         if (isOperator) {
             if(currentNumber != "") CalculatorData.expression.add(currentNumber)
             if(c != "") CalculatorData.expression.add(c.trim())
