@@ -4,8 +4,9 @@ import androidx.ui.graphics.Color
 import androidx.ui.text.AnnotatedString
 import androidx.ui.text.SpanStyle
 import androidx.ui.text.annotatedString
-import com.practice.calculator.CalculatorData.FIRSTOPERATOR
-import com.practice.calculator.CalculatorData.SECOND_OPERATOR
+import com.practice.calculator.data.CalculatorData
+import com.practice.calculator.data.CalculatorData.FIRSTOPERATOR
+import com.practice.calculator.data.CalculatorData.SECOND_OPERATOR
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -95,4 +96,29 @@ fun fractionGenerate(expression: ArrayList<String>): ArrayList<String> {
     }
 
     return array
+}
+
+
+fun findBiggestParenthesis(expression: ArrayList<String>, from: Int): Pair<Int, Int> {
+    var numOfOpen = 1
+    var numOfClose = 0
+    if (expression[from] == "("){
+        for (i in from..expression.lastIndex) {
+            if (expression[i] == "(") {
+                numOfOpen++
+            } else if (expression[i] == ")") {
+                numOfClose++
+                if(numOfOpen - numOfClose <= 1){
+                    return Pair(from, i + 1)
+                }
+            }
+        }
+    }
+    return Pair(-1,-1)
+}
+
+fun <E> ArrayList<E>.delete(from: Int, to: Int){
+    for(i in from..to){
+        this.removeAt(from)
+    }
 }

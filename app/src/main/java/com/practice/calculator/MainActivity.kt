@@ -1,3 +1,4 @@
+
 package com.practice.calculator
 
 import android.os.Bundle
@@ -17,17 +18,12 @@ import androidx.ui.material.Button
 import androidx.ui.material.MaterialTheme
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
+import com.practice.calculator.data.CalculatorData
 import com.practice.calculator.ui.Config.expressFontSize
 import com.practice.calculator.ui.Config.numpadFontSize
 import com.practice.calculator.ui.Config.resultFontSize
 
-object CalculatorData {
-    var expression = ArrayList<String>()
-    val firstOperator = arrayListOf<String>("x", "/")
-    val secondOperator = arrayListOf<String>("+", "-")
-    const val SECOND_OPERATOR = false
-    const val FIRSTOPERATOR = true
-}
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
