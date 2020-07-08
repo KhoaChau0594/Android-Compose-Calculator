@@ -7,8 +7,10 @@ import androidx.ui.text.annotatedString
 import com.practice.calculator.data.CalculatorData
 import com.practice.calculator.data.CalculatorData.FIRSTOPERATOR
 import com.practice.calculator.data.CalculatorData.SECOND_OPERATOR
+import com.practice.calculator.data.ExpressionTree
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.pow
 
 sealed class Data {
     class Expression(exp: String)
@@ -36,7 +38,7 @@ fun expressionProcessor(str: String): AnnotatedString {
 }
 
 fun compute(): String {
-    return polishNotationGenerate().toString()
+    return ExpressionTree(CalculatorData.expression).compute().toString()
 }
 
 fun polishNotationGenerate(): ArrayList<String> {
@@ -102,23 +104,46 @@ fun fractionGenerate(expression: ArrayList<String>): ArrayList<String> {
 fun findBiggestParenthesis(expression: ArrayList<String>, from: Int): Pair<Int, Int> {
     var numOfOpen = 1
     var numOfClose = 0
-    if (expression[from] == "("){
+    if (expression[from] == "(") {
         for (i in from..expression.lastIndex) {
             if (expression[i] == "(") {
                 numOfOpen++
             } else if (expression[i] == ")") {
                 numOfClose++
-                if(numOfOpen - numOfClose <= 1){
+                if (numOfOpen - numOfClose <= 1) {
                     return Pair(from, i + 1)
                 }
             }
         }
     }
-    return Pair(-1,-1)
+    return Pair(-1, -1)
 }
 
-fun <E> ArrayList<E>.delete(from: Int, to: Int){
-    for(i in from..to){
+fun <E> ArrayList<E>.delete(from: Int, to: Int) {
+    for (i in from..to) {
         this.removeAt(from)
     }
+}
+
+fun compute(operator: String, first: Double, second: Double):Double{
+    var result = 0.0
+    when (operator) {
+        "+" -> {
+            result = first + second
+        }
+        "-" -> {
+            result = first - second
+        }
+        "x" -> {
+            result = first * second
+        }
+        "/" -> {
+            result = first / second
+        }
+        "^" -> {
+            result = first.pow(second)
+        }
+    }
+
+    return result
 }

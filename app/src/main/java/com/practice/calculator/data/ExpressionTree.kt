@@ -1,6 +1,7 @@
 package com.practice.calculator.data
 
 import android.graphics.Paint
+import com.practice.calculator.compute
 
 class ExpressionTree(expression: ArrayList<String>) {
     var node: ExpressionNode? = null
@@ -27,10 +28,16 @@ class ExpressionTree(expression: ArrayList<String>) {
     }
 
     fun compute(): Double{
-        var result = 0.0
+        return compute(node)
+    }
 
-
-
-        return result
+    private fun compute(node: ExpressionNode?): Double{
+        if(node?.left != null && node?.right != null){
+            val left = node.left?.compute() ?: 0.0
+            val right = node.right?.compute() ?: 0.0
+            val operator = node.operator ?: ""
+            return compute(operator, left, right)
+        }
+        return node?.compute() ?: 0.0
     }
 }

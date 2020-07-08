@@ -103,7 +103,7 @@ class ExpressionNode(
     fun compute(): Double {
         var result: Double = 0.0
         var i = 0
-        if (expression.size > 0) {
+        if (expression.size > 1) {
             val polishNotation = fractionGenerate(expression)
             while (i <= polishNotation.lastIndex) {
                 val cValue = polishNotation[i]
@@ -138,7 +138,7 @@ class ExpressionNode(
                 }
             }
             return result
-        } else if (expression.size == 0) {
+        } else if (expression.size == 1) {
             return expression[0].toDouble()
         }
         return 0.0
