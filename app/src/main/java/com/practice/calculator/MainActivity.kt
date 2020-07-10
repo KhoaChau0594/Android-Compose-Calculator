@@ -111,7 +111,7 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
 
     fun onClick(c: String, isOperator: Boolean = false) {
 
-        if (c.isEmpty()) { // "=" was clicked
+        if (c == "=") { // "=" was clicked
             if(currentNumber != "") CalculatorData.expression.add(currentNumber)
             currentNumber = ""
             modifing = true
@@ -119,9 +119,12 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
         }
 
         if(modifing){// if "=" was clicked we can add number to previous num
+            Log.d("debug","Go into modifired")
+            if(CalculatorData.expression.isNotEmpty()){
+                currentNumber = CalculatorData.expression[CalculatorData.expression.lastIndex]
+                CalculatorData.expression.removeAt(CalculatorData.expression.lastIndex)
+            }
 
-            currentNumber = CalculatorData.expression[CalculatorData.expression.lastIndex]
-            CalculatorData.expression.removeAt(CalculatorData.expression.lastIndex)
             modifing = false // turn the "flag" off
         }
 
@@ -134,6 +137,21 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
         } else {
             currentNumber += c
         }
+
+        Log.d("debug",currentNumber)
+        Log.d("debug",CalculatorData.expression.toString() )
+        Log.d("debug",modifing.toString())
+    }
+
+    fun clearData(){
+        Log.d("debug",currentNumber)
+        Log.d("debug",CalculatorData.expression.toString() )
+        Log.d("debug",modifing.toString())
+
+        expression.value = ""
+        resultState.value = ""
+        CalculatorData.expression.clear()
+        currentNumber = ""
     }
 
     /** First row */
@@ -235,10 +253,7 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
     ) {
         Button(
             onClick = {
-                expression.value = ""
-                resultState.value = ""
-                CalculatorData.expression.clear()
-                currentNumber = ""
+                clearData()
             },
             modifier = btnModifier.tag("tag1"),
             shape = btnShape,
@@ -533,7 +548,7 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
         }
         Button(
             onClick = {
-                onClick("", true)
+                onClick("=", true)
                 resultState.value = compute()
                 Log.d("DATA", CalculatorData.expression.toString())
             },

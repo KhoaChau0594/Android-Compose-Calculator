@@ -1,5 +1,6 @@
 package com.practice.calculator
 
+import android.util.Log
 import androidx.ui.graphics.Color
 import androidx.ui.text.AnnotatedString
 import androidx.ui.text.SpanStyle
@@ -8,6 +9,7 @@ import com.practice.calculator.data.CalculatorData
 import com.practice.calculator.data.CalculatorData.FIRSTOPERATOR
 import com.practice.calculator.data.CalculatorData.SECOND_OPERATOR
 import com.practice.calculator.data.ExpressionTree
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.pow
@@ -38,7 +40,13 @@ fun expressionProcessor(str: String): AnnotatedString {
 }
 
 fun compute(): String {
-    return ExpressionTree(CalculatorData.expression).compute().toString()
+    try{
+        return ExpressionTree(CalculatorData.expression).compute().toString()
+    }
+    catch (e: Exception){
+        Log.d("error", "compute error")
+        return "Error"
+    }
 }
 
 fun polishNotationGenerate(): ArrayList<String> {
