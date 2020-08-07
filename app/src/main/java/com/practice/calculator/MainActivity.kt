@@ -1,4 +1,3 @@
-
 package com.practice.calculator
 
 import android.os.Bundle
@@ -22,7 +21,6 @@ import com.practice.calculator.data.CalculatorData
 import com.practice.calculator.ui.Config.expressFontSize
 import com.practice.calculator.ui.Config.numpadFontSize
 import com.practice.calculator.ui.Config.resultFontSize
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -106,21 +104,27 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
     val btnShape = RoundedCornerShape(30.dp)
     val btnModifier2 = Modifier
     var modifing = false
-//        .preferredHeight(50.dp)
+
+    //        .preferredHeight(50.dp)
 //        .preferredWidth(70.dp)
+    fun log() {
+        Log.d("debug", currentNumber)
+        Log.d("debug", "${CalculatorData.expression}  ${CalculatorData.expression.size}")
+        Log.d("debug", modifing.toString())
+    }
 
     fun onClick(c: String, isOperator: Boolean = false) {
 
         if (c == "=") { // "=" was clicked
-            if(currentNumber != "") CalculatorData.expression.add(currentNumber)
+            if (currentNumber != "") CalculatorData.expression.add(currentNumber)
             currentNumber = ""
             modifing = true
             return
         }
 
-        if(modifing){// if "=" was clicked we can add number to previous num
-            Log.d("debug","Go into modifired")
-            if(CalculatorData.expression.isNotEmpty()){
+        if (modifing) {// if "=" was clicked we can add number to previous num
+            Log.d("debug", "Go into modifired")
+            if (CalculatorData.expression.isNotEmpty()) {
                 currentNumber = CalculatorData.expression[CalculatorData.expression.lastIndex]
                 CalculatorData.expression.removeAt(CalculatorData.expression.lastIndex)
             }
@@ -131,27 +135,41 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
         expression.value += c
 
         if (isOperator) {
-            if(currentNumber != "") CalculatorData.expression.add(currentNumber)
-            if(c != "") CalculatorData.expression.add(c.trim())
+            if (currentNumber != "") CalculatorData.expression.add(currentNumber)
+            if (c != "") CalculatorData.expression.add(c.trim())
             currentNumber = ""
         } else {
             currentNumber += c
         }
 
-        Log.d("debug",currentNumber)
-        Log.d("debug",CalculatorData.expression.toString() )
-        Log.d("debug",modifing.toString())
+        log()
     }
 
-    fun clearData(){
-        Log.d("debug",currentNumber)
-        Log.d("debug",CalculatorData.expression.toString() )
-        Log.d("debug",modifing.toString())
+    fun deleteLastCharacter() {
+        Log.d("debug", "-------------------------------")
+        log()
+        if (CalculatorData.expression.isNotEmpty()) {
+            CalculatorData.expression[CalculatorData.expression.lastIndex] =
+                CalculatorData.expression.last().deleteLastCharacter()
 
+            if (CalculatorData.expression.last().isEmpty()) {
+                CalculatorData.expression.removeAt(CalculatorData.expression.lastIndex)
+            }
+
+            expression.value = expression.value.expressionDeleteCharacter()
+            currentNumber = currentNumber.deleteLastCharacter()
+        }
+
+        log()
+    }
+
+    fun clearData() {
         expression.value = ""
         resultState.value = ""
         CalculatorData.expression.clear()
         currentNumber = ""
+
+        log()
     }
 
     /** First row */
@@ -213,13 +231,13 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
             Text(text = "^", fontSize = 20.sp)
         }
         Button(
-            onClick = { onClick("deg") },
+            onClick = { deleteLastCharacter() },
             modifier = btnModifier2.tag("tag4"),
             backgroundColor = Color(0xFFE9F0F4),
             contentColor = Color(0xFF4C5159),
             shape = btnShape
         ) {
-            Text(text = "deg", fontSize = 20.sp)
+            Text(text = "<=", fontSize = 20.sp)
         }
     }
 
@@ -550,7 +568,7 @@ fun NumPad(expression: MutableState<String>, resultState: MutableState<String>) 
             onClick = {
                 onClick("=", true)
                 resultState.value = compute()
-                Log.d("DATA", CalculatorData.expression.toString())
+                log()
             },
             modifier = btnModifier.tag("tag7"),
             backgroundColor = Color(0xFF2EC973),

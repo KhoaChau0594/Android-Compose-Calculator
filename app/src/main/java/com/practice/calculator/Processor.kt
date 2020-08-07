@@ -6,7 +6,7 @@ import androidx.ui.text.AnnotatedString
 import androidx.ui.text.SpanStyle
 import androidx.ui.text.annotatedString
 import com.practice.calculator.data.CalculatorData
-import com.practice.calculator.data.CalculatorData.FIRSTOPERATOR
+import com.practice.calculator.data.CalculatorData.FIRST_OPERATOR
 import com.practice.calculator.data.CalculatorData.SECOND_OPERATOR
 import com.practice.calculator.data.ExpressionTree
 import java.lang.Exception
@@ -23,7 +23,10 @@ fun expressionProcessor(str: String): AnnotatedString {
     return annotatedString {
         val operationArr: MutableList<Int> = ArrayList<Int>()
         str.forEachIndexed { index, c ->
-            if (c == '+' || c == '-' || c == 'x' || c == '/') {
+            if (CalculatorData.firstOperator.indexOf(c.toString()) >= 0 || CalculatorData.secondOperator.indexOf(
+                    c.toString()
+                ) >= 0
+            ) {
                 operationArr.add(index)
             }
         }
@@ -40,11 +43,10 @@ fun expressionProcessor(str: String): AnnotatedString {
 }
 
 fun compute(): String {
-    try{
+    try {
         return ExpressionTree(CalculatorData.expression).compute().toString()
-    }
-    catch (e: Exception){
-        Log.d("error", "compute error")
+    } catch (e: Exception) {
+        Log.d("debug", e.message.toString())
         return "Error"
     }
 }
@@ -95,7 +97,7 @@ fun fractionGenerate(expression: ArrayList<String>): ArrayList<String> {
                     } else {
                         array.add(array.lastIndex, i)
 
-                        operatorStack.push(FIRSTOPERATOR) // save operator to stack
+                        operatorStack.push(FIRST_OPERATOR) // save operator to stack
                         isFirstOperator = false
                     }
                 } else {
@@ -133,7 +135,7 @@ fun <E> ArrayList<E>.delete(from: Int, to: Int) {
     }
 }
 
-fun compute(operator: String, first: Double, second: Double):Double{
+fun compute(operator: String, first: Double, second: Double): Double {
     var result = 0.0
     when (operator) {
         "+" -> {
@@ -154,4 +156,20 @@ fun compute(operator: String, first: Double, second: Double):Double{
     }
 
     return result
+}
+
+fun String.deleteLastCharacter(): String {
+    if (this.length > 0) {
+        return this.substring(0, this.length - 1)
+    }
+    return this
+}
+
+fun String.expressionDeleteCharacter(): String {
+    if (this.length > 0) {
+        if (this[lastIndex] == ' ') {
+            return this.substring(0, this.length - 3)
+        } else return this.substring(0, this.length - 1)
+    }
+    return this
 }

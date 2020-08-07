@@ -100,6 +100,16 @@ class ExpressionNode(
         }
     }
 
+    fun computeGenerate(): Double{
+        if(left != null || right != null){
+            val left = left?.computeGenerate() ?: 0.0
+            val right = right?.computeGenerate() ?: 0.0
+            val operator = operator ?: ""
+            return com.practice.calculator.compute(operator, left, right)
+        }
+        return compute() ?: 0.0
+    }
+
     fun compute(): Double {
         var result: Double = 0.0
         var i = 0
@@ -111,8 +121,9 @@ class ExpressionNode(
                 val secondOperator = CalculatorData.secondOperator.indexOf(cValue)
                 if (firstOperator != -1 || secondOperator != -1) {
                     // "3" + "4"
-                    val first = polishNotation[i - 2].toDouble()
-                    val second = polishNotation[i - 1].toDouble()
+                    val first = if (polishNotation[i - 2] == "π") CalculatorData.PI else polishNotation[i - 2].toDouble()
+                    val second = if (polishNotation[i - 1] == "π") CalculatorData.PI else polishNotation[i - 1].toDouble()
+
                     when (cValue) {
                         "+" -> {
                             result = first + second
@@ -139,7 +150,7 @@ class ExpressionNode(
             }
             return result
         } else if (expression.size == 1) {
-            return expression[0].toDouble()
+            return if (expression[0] == "π") CalculatorData.PI else expression[0].toDouble()
         }
         return 0.0
     }

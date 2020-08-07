@@ -1,5 +1,6 @@
 package com.practice.calculator.CalculatorTest
 
+import com.practice.calculator.data.CalculatorData
 import com.practice.calculator.data.ExpressionTree
 import org.junit.Assert
 import org.junit.Test
@@ -42,4 +43,14 @@ class TestExpressionTree {
         tree.read()
         Assert.assertEquals(14.0, tree.compute(), 0.0)
     }
+
+    @Test
+    fun compute_test2() {
+        val tree = ExpressionTree(
+            arrayListOf("8", "x", "(", "(", "8", "+", "2", ")", "x", "(", "2", "+", "2", ")", ")")//
+        )
+        tree.read()
+        Assert.assertEquals(CalculatorData.PI, tree.compute(), 0.0)
+    }
+
 }

@@ -27,17 +27,8 @@ class ExpressionTree(expression: ArrayList<String>) {
         println("operator: ${node?.operator};  expression: ${node?.expression}")
     }
 
-    fun compute(): Double{
-        return compute(node)
-    }
 
-    private fun compute(node: ExpressionNode?): Double{
-        if(node?.left != null && node?.right != null){
-            val left = node.left?.compute() ?: 0.0
-            val right = node.right?.compute() ?: 0.0
-            val operator = node.operator ?: ""
-            return compute(operator, left, right)
-        }
-        return node?.compute() ?: 0.0
+    fun compute(): Double{
+        return node!!.computeGenerate()
     }
 }
